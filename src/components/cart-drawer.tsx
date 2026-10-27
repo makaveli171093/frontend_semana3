@@ -4,7 +4,6 @@ import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/auth-context";
 import { useRestaurant } from "@/context/restaurant-context";
-import { dashboardForRole } from "@/auth/roles";
 import { formatMoney } from "@/components/ui-primitives";
 
 export function CartDrawer({
