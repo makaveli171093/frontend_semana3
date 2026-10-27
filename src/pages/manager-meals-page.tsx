@@ -191,6 +191,8 @@ export function ManagerMealsPage() {
                       aria-label={`${meal.available ? "Pausar" : "Activar"} ${meal.name}`}
                       className={`availability-toggle${meal.available ? " is-available" : ""}`}
                       onClick={() => toggleMealAvailability(meal.id)}
+                      disabled
+                      title="La disponibilidad se administra desde el menú diario del backend"
                       type="button"
                     >
                       <span>
@@ -231,7 +233,7 @@ export function ManagerMealsPage() {
             {visibleMeals.length} de {meals.length} platos
           </span>
           <span>
-            <span className="table-green-dot" /> Disponible en menú de clientes
+            <span className="table-green-dot" /> Disponibilidad del menú diario: integración pendiente
           </span>
         </div>
       </section>
