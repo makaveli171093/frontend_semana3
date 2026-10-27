@@ -44,7 +44,7 @@ export function CustomerHomePage() {
           </a>
         </div>
         <div className="customer-welcome-image" role="img" aria-label="Un almuerzo fresco servido en un plato" />
-        <div className="welcome-note"><span><Clock3 aria-hidden="true" /></span><div><strong>Hecho hoy, para ti</strong><small>Disponible desde las 11:30</small></div></div>
+        <div className="welcome-note"><span><Clock3 aria-hidden="true" /></span><div><strong>Menú del día</strong><small>Disponibilidad según publicación</small></div></div>
       </section>
 
       <div className="customer-quick-stats">
