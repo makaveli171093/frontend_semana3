@@ -8,8 +8,8 @@ import {
   type ReactNode,
 } from "react";
 import type {
-  DemoOrder,
-  DemoUser,
+  Order,
+  User,
   Meal,
   MealDraft,
   OrderStatus,
@@ -24,7 +24,7 @@ export interface CartItem {
 
 interface RestaurantContextValue {
   meals: Meal[];
-  orders: DemoOrder[];
+  orders: Order[];
   cart: CartItem[];
   cartCount: number;
   cartTotal: number;
@@ -33,7 +33,7 @@ interface RestaurantContextValue {
   setCartQuantity: (mealId: string, quantity: number) => void;
   removeFromCart: (mealId: string) => void;
   clearCart: () => void;
-  createOrder: (user: DemoUser) => DemoOrder | null;
+  createOrder: (user: User) => Order | null;
   saveMeal: (draft: MealDraft) => Promise<void>;
   toggleMealAvailability: (mealId: string) => void;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
@@ -43,7 +43,7 @@ const RestaurantContext = createContext<RestaurantContextValue | null>(null);
 
 export function RestaurantProvider({ children }: { children: ReactNode }) {
   const [meals, setMeals] = useState<Meal[]>([]);
-  const [orders, setOrders] = useState<DemoOrder[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [catalogLoading, setCatalogLoading] = useState(true);
   const [catalogError, setCatalogError] = useState<string | null>(null);
