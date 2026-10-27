@@ -10,6 +10,7 @@ import { HomePage } from "@/pages/home-page"
 import { KitchenPage } from "@/pages/kitchen-page"
 import { ManagerDashboardPage } from "@/pages/manager-dashboard-page"
 import { ManagerMealsPage } from "@/pages/manager-meals-page"
+import { ManagerDailyMenuPage } from "@/pages/manager-daily-menu-page"
 import { ManagerOrdersPage } from "@/pages/manager-orders-page"
 import { ManagerUsersPage } from "@/pages/manager-users-page"
 import { WorkspaceShell } from "@/components/site-shell"
@@ -54,6 +55,7 @@ export default function App() {
         <Route element={<WorkspaceShell role="GERENTE" />} path="/gerente">
           <Route element={<ManagerDashboardPage />} index />
           <Route element={<ManagerMealsPage />} path="comidas" />
+          <Route element={<ManagerDailyMenuPage />} path="menu-diario" />
           <Route element={<ManagerOrdersPage />} path="pedidos" />
           <Route element={<ManagerUsersPage />} path="usuarios" />
         </Route>
