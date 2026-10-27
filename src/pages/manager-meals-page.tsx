@@ -2,7 +2,6 @@ import { useMemo, useState, type FormEvent } from "react";
 import {
   Check,
   CirclePlus,
-  Clock3,
   Edit3,
   ImagePlus,
   Search,
@@ -15,7 +14,6 @@ import {
   Modal,
   PageHeading,
   ToastNotice,
-  formatMoney,
 } from "@/components/ui-primitives";
 import { useRestaurant } from "@/context/restaurant-context";
 import type { Meal, MealCategory, MealDraft } from "@/types";
@@ -31,7 +29,7 @@ const newMeal: MealDraft = {
   description: "",
   price: 0,
   category: "Platos principales",
-  image: "/images/solandre-hero.png",
+  image: "",
   available: false,
   prepTime: 0,
 };
