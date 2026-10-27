@@ -79,7 +79,8 @@ export function CustomerOrdersPage() {
     [orders, user?.id],
   )
   const filteredOrders = customerOrders.filter((order) => filter === "TODOS" || order.status === filter)
-  const placedOrderId = (location.state as { orderPlaced?: string } | null)?.orderPlaced
+  const orderState = location.state as { orderPlaced?: string; pickupToken?: string; orderStatus?: string } | null
+  const placedOrderId = orderState?.orderPlaced
 
   return (
     <div>
