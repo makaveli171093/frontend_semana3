@@ -52,7 +52,7 @@ const emptyForm = (): MenuForm => ({
   imagen_url: "",
   cantidad_disponible: "50",
   precio_menu: "",
-  publicado: false,
+  publicado: true,
 });
 
 export function ManagerDailyMenuPage() {
