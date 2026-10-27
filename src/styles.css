@@ -65,7 +65,7 @@
 
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; min-width: 320px; background: var(--cream); color: var(--ink); font-size: 14px; line-height: 1.55; -webkit-font-smoothing: antialiased; }
+body { margin: 0; min-width: 320px; background: var(--cream); color: var(--ink); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 body, button, input, textarea, select { font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif; }
 button:not(:disabled), [role="button"]:not([aria-disabled="true"]) { cursor: pointer; }
 button:disabled { cursor: not-allowed; }
