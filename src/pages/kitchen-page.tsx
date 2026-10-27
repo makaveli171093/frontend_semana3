@@ -51,7 +51,7 @@ export function KitchenPage() {
     <div className="kitchen-screen">
       <header className="kitchen-header">
         <Brand />
-        <div className="kitchen-header-center"><span className="kitchen-live"><span /> SERVICIO ACTIVO</span><span>La Paz · Almuerzo</span></div>
+        <div className="kitchen-header-center"><span className="kitchen-live"><span /> PANEL DE COCINA</span><span>Pedidos del backend pendientes de conexión</span></div>
         <div className="kitchen-user"><span className="kitchen-user-icon"><ChefHat aria-hidden="true" /></span><span>{user?.name}</span><Button aria-label="Cerrar sesión" onClick={() => { logout(); navigate("/") }} size="icon" type="button" variant="ghost"><LogOut aria-hidden="true" /></Button></div>
       </header>
       <main className="kitchen-main mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -89,7 +89,7 @@ export function KitchenPage() {
             )
           })}
         </section>
-        <div className="kitchen-footer-note"><span><span className="kitchen-live"><span /> EN VIVO</span> Los cambios se reflejan en los pedidos de clientes y gerencia.</span><span>Vista de demostración · Datos temporales</span></div>
+        <div className="kitchen-footer-note"><span><span className="kitchen-live"><span /> EN VIVO</span> La sincronización con clientes y gerencia se habilitará al conectar la API.</span><span>Sincronización pendiente</span></div>
       </main>
       <ToastNotice message={notice} onClose={clearNotice} />
     </div>
