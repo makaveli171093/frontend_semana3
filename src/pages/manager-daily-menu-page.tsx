@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
+import axios from "axios";
 import { Check, CirclePlus, RefreshCw, UtensilsCrossed } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Modal, PageHeading, ToastNotice } from "@/components/ui-primitives";
@@ -22,6 +23,25 @@ const today = () => {
   const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
   return local.toISOString().slice(0, 10);
 };
+
+function getApiErrorMessage(error: unknown, fallback: string): string {
+  if (axios.isAxiosError(error)) {
+    const status = error.response?.status;
+    const data = error.response?.data as
+      | { detail?: unknown; message?: unknown; error?: unknown; errors?: unknown }
+      | string
+      | undefined;
+    if (typeof data === "string" && data.trim()) return `${fallback} (${status ?? "sin respuesta"}): ${data}`;
+    if (data && typeof data === "object") {
+      const detail = data.detail ?? data.message ?? data.error ?? data.errors;
+      if (typeof detail === "string" && detail.trim()) return `${fallback} (${status ?? "API"}): ${detail}`;
+      if (detail !== undefined) return `${fallback} (${status ?? "API"}): ${JSON.stringify(detail)}`;
+    }
+    if (status) return `${fallback} (HTTP ${status}). Revisa los datos enviados y los permisos de gerente.`;
+    if (error.code === "ERR_NETWORK") return "No se pudo conectar con el backend. Verifica la API y vuelve a intentar.";
+  }
+  return fallback;
+}
 
 const emptyForm = (): MenuForm => ({
   fecha: today(),
@@ -112,7 +132,7 @@ export function ManagerDailyMenuPage() {
       await loadData();
     } catch (error) {
       console.error("Error creando menú diario:", error);
-      setNotice("No se pudo crear el menú. Revisa los campos y los permisos de tu cuenta.");
+      setNotice(getApiErrorMessage(error, "No se pudo crear el menú."));
     } finally {
       setSaving(false);
     }
@@ -141,7 +161,7 @@ export function ManagerDailyMenuPage() {
       await loadData();
     } catch (error) {
       console.error("Error actualizando menú diario:", error);
-      setNotice("No se pudo actualizar el menú. Verifica tu sesión y vuelve a intentar.");
+      setNotice(getApiErrorMessage(error, "No se pudo actualizar el menú."));
     } finally {
       setSaving(false);
     }
