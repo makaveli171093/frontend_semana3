@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { OrderDetails } from "@/components/order-details"
 import { PageHeading, StatusBadge, formatMoney, formatTime } from "@/components/ui-primitives"
 import { useRestaurant } from "@/context/restaurant-context"
-import type { DemoOrder, OrderStatus } from "@/types"
+import type { Order, OrderStatus } from "@/types"
 
 const orderStatusFilters: Array<{ value: "TODOS" | OrderStatus; label: string }> = [
   { value: "TODOS", label: "Todos" },
@@ -18,7 +18,7 @@ export function ManagerOrdersPage() {
   const { orders, updateOrderStatus } = useRestaurant()
   const [query, setQuery] = useState("")
   const [filter, setFilter] = useState<"TODOS" | OrderStatus>("TODOS")
-  const [selectedOrder, setSelectedOrder] = useState<DemoOrder | null>(null)
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const visibleOrders = useMemo(() => [...orders]
     .filter((order) => filter === "TODOS" || order.status === filter)
     .filter((order) => `${order.id} ${order.customerName}`.toLocaleLowerCase("es").includes(query.toLocaleLowerCase("es")))
