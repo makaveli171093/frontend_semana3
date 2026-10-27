@@ -97,6 +97,11 @@ export function ManagerDailyMenuPage() {
   const submitCreate = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (saving) return;
+    const duplicate = menus.find((menu) => menu.fecha === form.fecha);
+    if (duplicate) {
+      setNotice(`Ya existe un menú para el ${form.fecha}. Puedes editarlo desde “Menús registrados” o elegir otra fecha.`);
+      return;
+    }
     const principal = Number(form.plato_principal_id);
     const bebida = Number(form.bebida_id);
     const postre = Number(form.postre_id);
