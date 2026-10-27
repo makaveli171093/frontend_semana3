@@ -2,7 +2,6 @@ import {
   createContext,
   useContext,
   useMemo,
-  useRef,
   useState,
   useEffect,
   type ReactNode,
@@ -224,13 +223,9 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
             description: plato.descripcion ?? "",
             category: categoriaFrontend(plato.tipo),
             image: plato.imagen_url ?? "",
-            price: draft.price,
-            available: draft.available,
-            prepTime: draft.prepTime,
-            ...(anterior?.badge ? { badge: anterior.badge } : {}),
-            ...(anterior?.calories !== undefined
-              ? { calories: anterior.calories }
-              : {}),
+            price: 0,
+            available: false,
+            prepTime: 0,
           };
 
           return anterior
