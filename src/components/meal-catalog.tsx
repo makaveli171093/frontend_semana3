@@ -68,16 +68,20 @@ export function MealCatalog({
       ) : (
         <div className="catalog-empty" role="status">
           <span className="catalog-empty-icon"><Search aria-hidden="true" /></span>
-          <h3>No encontramos ese plato</h3>
-          <p>Prueba con otra búsqueda o cambia la categoría elegida.</p>
-          <Button
-            onClick={() => { setSearch(""); setCategory("Todos") }}
-            size="sm"
-            type="button"
-            variant="outline"
-          >
-            Ver todo el menú
-          </Button>
+          <h3>{meals.length === 0 ? "El menú de hoy aún no está disponible" : "No encontramos ese plato"}</h3>
+          <p>{meals.length === 0
+            ? "La cocina todavía no publicó la oferta del día. Vuelve a consultar en unos minutos."
+            : "Prueba con otra búsqueda o cambia la categoría elegida."}</p>
+          {(search || category !== "Todos") && (
+            <Button
+              onClick={() => { setSearch(""); setCategory("Todos") }}
+              size="sm"
+              type="button"
+              variant="outline"
+            >
+              Ver todo el menú
+            </Button>
+          )}
         </div>
       )}
     </div>
