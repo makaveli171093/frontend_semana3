@@ -32,8 +32,8 @@ const newMeal: MealDraft = {
   price: 0,
   category: "Platos principales",
   image: "/images/solandre-hero.png",
-  available: true,
-  prepTime: 15,
+  available: false,
+  prepTime: 0,
 };
 
 export function ManagerMealsPage() {
@@ -64,8 +64,8 @@ export function ManagerMealsPage() {
 
     if (saving || !editing) return;
 
-    if (!editing.name.trim() || editing.price <= 0 || editing.prepTime <= 0) {
-      setNotice("Completa el nombre, el precio y el tiempo de preparación.");
+    if (!editing.name.trim()) {
+      setNotice("Completa el nombre del plato.");
       return;
     }
 
@@ -101,7 +101,7 @@ export function ManagerMealsPage() {
   return (
     <div>
       <PageHeading
-        description="Mantén tu carta al día y controla qué platos están disponibles."
+        description="Administra los datos básicos de los platos. El precio y la disponibilidad pertenecen al menú diario."
         eyebrow="La carta de Solandre"
         title="Menú y comidas"
         actions={
@@ -178,14 +178,8 @@ export function ManagerMealsPage() {
                     </div>
                   </td>
                   <td>{meal.category}</td>
-                  <td>
-                    <strong>{formatMoney(meal.price)}</strong>
-                  </td>
-                  <td>
-                    <span className="table-time">
-                      <Clock3 aria-hidden="true" /> {meal.prepTime} min
-                    </span>
-                  </td>
+                  <td><span>Se configura en menú diario</span></td>
+                  <td><span>—</span></td>
                   <td>
                     <button
                       aria-label={`${meal.available ? "Pausar" : "Activar"} ${meal.name}`}
@@ -239,11 +233,7 @@ export function ManagerMealsPage() {
       </section>
 
       <Modal
-        description={
-          editing?.id
-            ? "Actualiza la información y disponibilidad de este plato."
-            : "Completa los datos básicos para agregar un plato a la carta."
-        }
+        description="Esta operación guarda nombre, descripción, tipo e imagen en el catálogo. El precio y la disponibilidad se gestionan en el menú diario."
         onClose={() => setEditing(null)}
         open={Boolean(editing)}
         title={editing?.id ? "Editar comida" : "Nueva comida"}
@@ -289,30 +279,6 @@ export function ManagerMealsPage() {
                   value={editing.description}
                 />
               </label>
-              <label className="form-field">
-                <span>Precio (Bs.)</span>
-                <input
-                  min="1"
-                  onChange={(event) =>
-                    updateDraft("price", Number(event.target.value))
-                  }
-                  required
-                  type="number"
-                  value={editing.price || ""}
-                />
-              </label>
-              <label className="form-field">
-                <span>Tiempo de preparación (min)</span>
-                <input
-                  min="1"
-                  onChange={(event) =>
-                    updateDraft("prepTime", Number(event.target.value))
-                  }
-                  required
-                  type="number"
-                  value={editing.prepTime || ""}
-                />
-              </label>
               <label className="form-field field-span-two">
                 <span>URL de imagen</span>
                 <span className="form-input-wrap">
@@ -328,24 +294,6 @@ export function ManagerMealsPage() {
                 </span>
               </label>
             </div>
-            <label className="availability-checkbox">
-              <input
-                checked={editing.available}
-                onChange={(event) =>
-                  updateDraft("available", event.target.checked)
-                }
-                type="checkbox"
-              />
-              <span className="custom-check">
-                <Check aria-hidden="true" />
-              </span>
-              <span>
-                <strong>Disponible en el menú</strong>
-                <small>
-                  Los clientes podrán agregar este plato a su pedido.
-                </small>
-              </span>
-            </label>
             <div className="modal-footer form-footer">
               <Button
                 onClick={() => setEditing(null)}
