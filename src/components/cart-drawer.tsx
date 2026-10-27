@@ -56,6 +56,10 @@ export function CartDrawer({
         navigate("/cliente/pedidos", {
           state: { orderPlaced: order.id },
         });
+      } else {
+        setMessage(
+          "La confirmación de pedidos aún no está conectada. Tu carrito se conserva; vuelve a intentarlo cuando se habilite el formulario.",
+        );
       }
     } catch (error) {
       console.error("Error al registrar el pedido:", error);
