@@ -20,7 +20,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { CartDrawer } from "@/components/cart-drawer"
 import { useAuth } from "@/context/auth-context"
 import { useRestaurant } from "@/context/restaurant-context"
-import { dashboardForRole } from "@/services/demo-auth"
+import { dashboardForRole } from "@/auth/roles"
 
 export function Brand({ light = false }: { light?: boolean }) {
   return (
