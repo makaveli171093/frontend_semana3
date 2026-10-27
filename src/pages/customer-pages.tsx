@@ -7,7 +7,7 @@ import { OrderDetails } from "@/components/order-details"
 import { PageHeading, RoleBadge, StatusBadge, ToastNotice, formatFullDate, formatMoney, formatTime } from "@/components/ui-primitives"
 import { useAuth } from "@/context/auth-context"
 import { useRestaurant } from "@/context/restaurant-context"
-import type { DemoOrder, OrderStatus } from "@/types"
+import type { Order, OrderStatus } from "@/types"
 
 const orderFilters: Array<{ value: "TODOS" | OrderStatus; label: string }> = [
   { value: "TODOS", label: "Todos" },
@@ -71,7 +71,7 @@ export function CustomerOrdersPage() {
   const { orders } = useRestaurant()
   const location = useLocation()
   const [filter, setFilter] = useState<"TODOS" | OrderStatus>("TODOS")
-  const [selectedOrder, setSelectedOrder] = useState<DemoOrder | null>(null)
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const customerOrders = useMemo(
     () => orders
       .filter((order) => order.customerId === user?.id)
