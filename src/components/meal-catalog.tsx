@@ -2,7 +2,7 @@ import { useMemo, useState } from "react"
 import { Search, SlidersHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { MealCard } from "@/components/meal-card"
-import { mealCategories } from "@/data/demo-data"
+import { mealCategories } from "@/data/meal-categories"
 import type { Meal } from "@/types"
 
 export function MealCatalog({
