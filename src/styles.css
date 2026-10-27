@@ -1418,3 +1418,44 @@ button, input, textarea, select { font-size: inherit; }
   .order-detail-layout { gap: 12px; }
   .order-detail-aside { padding: 11px; }
 }
+
+
+/* Accesibilidad: tipografía más legible en navegación, formularios y encabezados. */
+.workspace-sidebar .workspace-nav-link {
+  min-height: 46px;
+  gap: 12px;
+  padding: 0 13px;
+  font-size: 14px;
+  line-height: 1.45;
+}
+.workspace-sidebar .workspace-nav-link svg { width: 19px; height: 19px; flex: 0 0 auto; }
+.workspace-sidebar .workspace-role-label { font-size: 12px; }
+.workspace-sidebar .sidebar-note strong { font-size: 14px; }
+.workspace-sidebar .sidebar-note > span:last-child,
+.workspace-sidebar .sidebar-user-copy span { font-size: 12px; line-height: 1.45; }
+.workspace-sidebar .sidebar-user-copy strong { font-size: 14px; }
+.workspace-topbar-title > span { font-size: 12px; }
+.workspace-topbar-title h1 { font-size: clamp(25px, 2.2vw, 32px); }
+.workspace-topbar .today-label { font-size: 13px; }
+.page-heading .eyebrow { font-size: 12px; }
+.page-heading h1 { font-size: clamp(30px, 2.6vw, 38px); line-height: 1.15; }
+.page-heading p,
+.management-toolbar p { font-size: 14px; line-height: 1.6; }
+.management-toolbar h2,
+.panel h2 { font-size: 20px; line-height: 1.3; }
+.form-field { gap: 8px; font-size: 14px; line-height: 1.45; }
+.form-field input,
+.form-field select,
+.form-field textarea,
+.auth-input { min-height: 46px; font-size: 14px; padding: 11px 13px; }
+.form-field textarea { min-height: 92px; }
+.meal-editor-form .form-field input[type="checkbox"] { width: 18px; min-height: 18px; height: 18px; }
+.data-table th { font-size: 12px; line-height: 1.45; }
+.data-table td { font-size: 13px; line-height: 1.5; }
+.workspace-content { font-size: 14px; }
+@media (max-width: 760px) {
+  .workspace-sidebar .workspace-nav-link { min-height: 44px; font-size: 13px; }
+  .page-heading h1 { font-size: 30px; }
+  .management-toolbar h2, .panel h2 { font-size: 18px; }
+  .form-field { font-size: 13px; }
+}
