@@ -20,11 +20,6 @@ export interface User {
   role: UserRole;
 }
 
-export interface DemoAccount {
-  user: User;
-  password: string;
-}
-
 export interface Meal {
   id: string;
   name: string;
