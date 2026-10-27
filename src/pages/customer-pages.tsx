@@ -89,7 +89,7 @@ export function CustomerOrdersPage() {
         title="Mis pedidos"
       />
       {placedOrderId && (
-        <div className="order-success-banner" role="status"><span><BadgeCheck aria-hidden="true" /></span><div><strong>¡Pedido enviado a cocina!</strong><p>{placedOrderId} ya está en preparación. Puedes seguirlo desde aquí.</p></div></div>
+        <div className="order-success-banner" role="status"><span><BadgeCheck aria-hidden="true" /></span><div><strong>¡Pedido registrado!</strong><p>Pedido #{placedOrderId} · Estado: {orderState?.orderStatus ?? "Pendiente"}{orderState?.pickupToken ? ` · Token de recogida: ${orderState.pickupToken}` : ""}. El estado se actualizará según avance la cocina.</p></div></div>
       )}
       <div aria-label="Filtrar pedidos por estado" className="order-filter-tabs" role="group">
         {orderFilters.map((item) => (
