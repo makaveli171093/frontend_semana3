@@ -6,7 +6,7 @@ import { Brand } from "@/components/site-shell"
 import { PageHeading, StatusBadge, ToastNotice, formatMoney, formatTime } from "@/components/ui-primitives"
 import { useAuth } from "@/context/auth-context"
 import { useRestaurant } from "@/context/restaurant-context"
-import type { DemoOrder, OrderStatus } from "@/types"
+import type { Order, OrderStatus } from "@/types"
 
 const kitchenStages: Array<{ status: OrderStatus; title: string; description: string; action?: string; next?: OrderStatus; icon: typeof ChefHat }> = [
   { status: "PENDIENTE", title: "Por preparar", description: "Pedidos recién recibidos", action: "Iniciar preparación", next: "EN_PREPARACION", icon: Clock3 },
@@ -20,7 +20,7 @@ function KitchenOrderCard({
   nextStatus,
   action,
 }: {
-  order: DemoOrder
+  order: Order
   onAdvance: () => void
   nextStatus?: OrderStatus
   action?: string
