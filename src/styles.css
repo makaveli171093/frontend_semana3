@@ -1459,3 +1459,44 @@ button, input, textarea, select { font-size: inherit; }
   .management-toolbar h2, .panel h2 { font-size: 18px; }
   .form-field { font-size: 13px; }
 }
+
+
+/* Espaciado interior para el formulario de creación y su panel contenedor. */
+.meal-management-panel {
+  padding: clamp(20px, 2.5vw, 32px);
+}
+.meal-management-panel > .management-toolbar {
+  margin-bottom: 24px;
+}
+.meal-management-panel .meal-editor-form {
+  width: 100%;
+  padding: 4px 2px 2px;
+  gap: 24px;
+}
+.meal-management-panel .meal-editor-fields {
+  gap: 22px 24px;
+  padding: 2px 4px 8px;
+}
+.meal-management-panel .meal-editor-fields .form-field {
+  min-width: 0;
+}
+.meal-management-panel .meal-editor-fields .form-field input,
+.meal-management-panel .meal-editor-fields .form-field select,
+.meal-management-panel .meal-editor-fields .form-field textarea {
+  box-sizing: border-box;
+}
+.meal-management-panel .meal-editor-form .form-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin: 0;
+  padding: 18px 4px 2px;
+  border-top: 1px solid var(--line, #e6e7dd);
+}
+@media (max-width: 760px) {
+  .meal-management-panel { padding: 18px 16px 20px; }
+  .meal-management-panel > .management-toolbar { margin-bottom: 20px; }
+  .meal-management-panel .meal-editor-form { gap: 20px; }
+  .meal-management-panel .meal-editor-fields { gap: 18px; padding-inline: 1px; }
+  .meal-management-panel .meal-editor-form .form-footer { padding-top: 16px; }
+}
