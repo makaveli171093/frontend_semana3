@@ -16,9 +16,9 @@ export function ManagerDashboardPage() {
   const latestOrders = [...orders].sort((a, b) => b.createdAt.localeCompare(a.createdAt)).slice(0, 4)
 
   const metrics = [
-    { label: "Ventas registradas", value: formatMoney(totalSales), note: "En esta sesión de demo", icon: CircleDollarSign, tone: "green" },
+    { label: "Ventas registradas", value: formatMoney(totalSales), note: "Resumen de pedidos cargados", icon: CircleDollarSign, tone: "green" },
     { label: "Pedidos activos", value: String(openOrders.length).padStart(2, "0"), note: `${pendingOrders.length} esperando cocina`, icon: PackageCheck, tone: "orange" },
-    { label: "Entregados hoy", value: String(completedOrders.length).padStart(2, "0"), note: "Servicio de mediodía", icon: Activity, tone: "sage" },
+    { label: "Entregados hoy", value: String(completedOrders.length).padStart(2, "0"), note: "Según pedidos cargados", icon: Activity, tone: "sage" },
     { label: "Platos disponibles", value: String(activeMeals).padStart(2, "0"), note: `${meals.length} en el menú`, icon: UtensilsCrossed, tone: "blue" },
   ]
 
@@ -26,7 +26,7 @@ export function ManagerDashboardPage() {
     <div className="manager-dashboard-page">
       <PageHeading
         description="Así va el servicio de hoy en Solandre."
-        eyebrow="Martes · servicio de almuerzo"
+        eyebrow="Resumen operativo"
         title="Un buen día en cocina."
         actions={<Link className={buttonVariants({ size: "lg", variant: "default" })} to="/gerente/pedidos">Ver pedidos <ArrowRight aria-hidden="true" data-icon="inline-end" /></Link>}
       />
@@ -71,9 +71,9 @@ export function ManagerDashboardPage() {
 
         <aside className="manager-side-column">
           <section className="service-status-card">
-            <div className="service-status-top"><span className="service-live-dot" /> Servicio activo <span>12:00</span></div>
-            <h2>El almuerzo<br /><em>está en marcha.</em></h2>
-            <p>El equipo está atendiendo el servicio de mediodía.</p>
+            <div className="service-status-top"><span className="service-live-dot" /> Estado del panel <span>API pendiente</span></div>
+            <h2>Resumen del<br /><em>servicio.</em></h2>
+            <p>Los indicadores se completarán cuando se conecten los pedidos reales.</p>
             <div className="service-progress-track"><span style={{ width: `${Math.min(100, Math.max(16, (completedOrders.length / Math.max(1, orders.length)) * 100))}%` }} /></div>
             <div className="service-progress-label"><span>Pedidos entregados</span><strong>{completedOrders.length} de {orders.length}</strong></div>
           </section>
