@@ -6,6 +6,7 @@ import {
   Home,
   LayoutDashboard,
   Leaf,
+  CalendarDays,
   LogOut,
   Menu,
   PackageCheck,
@@ -151,7 +152,8 @@ const clientLinks = [
 
 const managerLinks = [
   { to: "/gerente", label: "Resumen", icon: LayoutDashboard, end: true },
-  { to: "/gerente/comidas", label: "Comidas", icon: UtensilsCrossed },
+  { to: "/gerente/comidas", label: "Catálogo de platos", icon: UtensilsCrossed },
+  { to: "/gerente/menu-diario", label: "Menú diario", icon: CalendarDays },
   { to: "/gerente/pedidos", label: "Pedidos", icon: PackageCheck },
   { to: "/gerente/usuarios", label: "Usuarios", icon: UsersRound },
 ]
@@ -161,7 +163,8 @@ const workspaceTitles: Record<string, string> = {
   "/cliente/pedidos": "Mis pedidos",
   "/cliente/perfil": "Mi perfil",
   "/gerente": "Resumen del día",
-  "/gerente/comidas": "Menú y comidas",
+  "/gerente/comidas": "Catálogo de platos",
+  "/gerente/menu-diario": "Menú diario",
   "/gerente/pedidos": "Pedidos",
   "/gerente/usuarios": "Clientes",
 }
