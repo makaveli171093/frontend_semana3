@@ -52,10 +52,40 @@ export interface ActualizarMenuPayload {
   publicado: boolean;
 }
 
+// Obtiene la fecha actual respetando la zona horaria de Bolivia.
+function obtenerFechaBolivia(): string {
+  const partes = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/La_Paz",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+
+  const valores = Object.fromEntries(
+    partes.map(({ type, value }) => [type, value]),
+  );
+
+  return `${valores.year}-${valores.month}-${valores.day}`;
+}
+
 export const menuService = {
   async obtenerMenuHoy(): Promise<MenuDelDia | null> {
-    const { data } = await api.get<MenuDelDia | null>("/catalogo/menu-hoy");
-    return data;
+    const fechaHoy = obtenerFechaBolivia();
+
+    try {
+      const { data } = await api.get<MenuDelDia>(`/catalogo/menu/${fechaHoy}`);
+
+      // No mostrar menús que no estén publicados o no tengan stock.
+      if (!data || !data.publicado || data.cantidad_disponible <= 0) {
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      // Si no existe menú para esa fecha, la API puede responder 404.
+      // Los demás errores se propagan para no ocultar fallos del servidor.
+      throw error;
+    }
   },
 
   async listarAdmin(): Promise<MenuAdmin[]> {
@@ -68,7 +98,10 @@ export const menuService = {
     return data;
   },
 
-  async actualizar(id: number, payload: ActualizarMenuPayload): Promise<MenuAdmin> {
+  async actualizar(
+    id: number,
+    payload: ActualizarMenuPayload,
+  ): Promise<MenuAdmin> {
     const { data } = await api.put<MenuAdmin>(`/admin/menu/${id}`, payload);
     return data;
   },

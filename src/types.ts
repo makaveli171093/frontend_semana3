@@ -38,6 +38,10 @@ export interface Meal {
   platoPrincipal?: string;
   bebida?: string;
   postre?: string;
+
+  platoPrincipalDescripcion?: string;
+  bebidaDescripcion?: string;
+  postreDescripcion?: string;
 }
 
 export type MealDraft = Omit<Meal, "id"> & { id?: string };

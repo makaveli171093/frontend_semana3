@@ -6,13 +6,7 @@ import {
   useEffect,
   type ReactNode,
 } from "react";
-import type {
-  Order,
-  User,
-  Meal,
-  MealDraft,
-  OrderStatus,
-} from "@/types";
+import type { Order, User, Meal, MealDraft, OrderStatus } from "@/types";
 import { platosService, type Plato } from "@/services/platos.service";
 import { menuService } from "@/services/menu.service";
 
@@ -115,6 +109,10 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
           platoPrincipal: menu.plato_principal?.nombre ?? "",
           bebida: menu.bebida?.nombre ?? "",
           postre: menu.postre?.nombre ?? "",
+          platoPrincipalDescripcion: menu.plato_principal?.descripcion ?? "",
+          bebidaDescripcion: menu.bebida?.descripcion ?? "",
+          postreDescripcion: menu.postre?.descripcion ?? "",
+
           name: menu.plato_principal?.nombre
             ? `Menú del día: ${menu.plato_principal.nombre}`
             : "Menú del día",
@@ -149,7 +147,6 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
       cancelled = true;
     };
   }, []);
-
 
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
   const cartTotal = cart.reduce(
