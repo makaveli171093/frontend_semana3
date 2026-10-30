@@ -1,6 +1,6 @@
 import api from "@/api/axios";
 import { loginSchema, registerSchema } from "@/auth/auth.schema";
-import type { DemoUser, UserRole } from "@/types";
+import type { User, UserRole } from "@/types";
 
 interface AuthResponse {
   access_token: string;
@@ -66,7 +66,7 @@ export async function loginRequest(email: string, password: string) {
     throw new Error("El servidor no devolvió un token de acceso.");
   }
 
-  const user: DemoUser = {
+  const user: User = {
     id: String(data.usuario_id),
     name: data.nombre_completo,
     email: data.email,

@@ -7,7 +7,7 @@ import { OrderDetails } from "@/components/order-details"
 import { PageHeading, RoleBadge, StatusBadge, ToastNotice, formatFullDate, formatMoney, formatTime } from "@/components/ui-primitives"
 import { useAuth } from "@/context/auth-context"
 import { useRestaurant } from "@/context/restaurant-context"
-import type { DemoOrder, OrderStatus } from "@/types"
+import type { Order, OrderStatus } from "@/types"
 
 const orderFilters: Array<{ value: "TODOS" | OrderStatus; label: string }> = [
   { value: "TODOS", label: "Todos" },
@@ -19,15 +19,15 @@ const orderFilters: Array<{ value: "TODOS" | OrderStatus; label: string }> = [
 
 export function CustomerHomePage() {
   const { user } = useAuth()
-  const { meals, orders, addToCart } = useRestaurant()
+  const { menuHoy, orders, addToCart } = useRestaurant()
   const [notice, setNotice] = useState("")
   const clearNotice = useCallback(() => setNotice(""), [])
-  const availableMeals = meals.filter((meal) => meal.available)
+  const availableMeals = menuHoy.filter((meal) => meal.available)
   const nextOrder = orders.find(
     (order) => order.customerId === user?.id && ["PENDIENTE", "EN_PREPARACION", "LISTO"].includes(order.status),
   )
 
-  const handleAdd = (meal: (typeof meals)[number]) => {
+  const handleAdd = (meal: (typeof menuHoy)[number]) => {
     addToCart(meal)
     setNotice(`${meal.name} se agregó a tu pedido.`)
   }
@@ -44,7 +44,7 @@ export function CustomerHomePage() {
           </a>
         </div>
         <div className="customer-welcome-image" role="img" aria-label="Un almuerzo fresco servido en un plato" />
-        <div className="welcome-note"><span><Clock3 aria-hidden="true" /></span><div><strong>Hecho hoy, para ti</strong><small>Disponible desde las 11:30</small></div></div>
+        <div className="welcome-note"><span><Clock3 aria-hidden="true" /></span><div><strong>Menú del día</strong><small>Disponibilidad según publicación</small></div></div>
       </section>
 
       <div className="customer-quick-stats">
@@ -71,7 +71,7 @@ export function CustomerOrdersPage() {
   const { orders } = useRestaurant()
   const location = useLocation()
   const [filter, setFilter] = useState<"TODOS" | OrderStatus>("TODOS")
-  const [selectedOrder, setSelectedOrder] = useState<DemoOrder | null>(null)
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null)
   const customerOrders = useMemo(
     () => orders
       .filter((order) => order.customerId === user?.id)
@@ -79,7 +79,8 @@ export function CustomerOrdersPage() {
     [orders, user?.id],
   )
   const filteredOrders = customerOrders.filter((order) => filter === "TODOS" || order.status === filter)
-  const placedOrderId = (location.state as { orderPlaced?: string } | null)?.orderPlaced
+  const orderState = location.state as { orderPlaced?: string; pickupToken?: string; orderStatus?: string } | null
+  const placedOrderId = orderState?.orderPlaced
 
   return (
     <div>
@@ -89,7 +90,7 @@ export function CustomerOrdersPage() {
         title="Mis pedidos"
       />
       {placedOrderId && (
-        <div className="order-success-banner" role="status"><span><BadgeCheck aria-hidden="true" /></span><div><strong>¡Pedido enviado a cocina!</strong><p>{placedOrderId} ya está en preparación. Puedes seguirlo desde aquí.</p></div></div>
+        <div className="order-success-banner" role="status"><span><BadgeCheck aria-hidden="true" /></span><div><strong>¡Pedido registrado!</strong><p>Pedido #{placedOrderId} · Estado: {orderState?.orderStatus ?? "Pendiente"}{orderState?.pickupToken ? ` · Token de recogida: ${orderState.pickupToken}` : ""}. El estado se actualizará según avance la cocina.</p></div></div>
       )}
       <div aria-label="Filtrar pedidos por estado" className="order-filter-tabs" role="group">
         {orderFilters.map((item) => (
@@ -159,14 +160,14 @@ export function CustomerProfilePage() {
       </section>
       <div className="profile-details-grid">
         <section className="profile-info-card">
-          <div className="card-heading"><div><p className="eyebrow">Cuenta demo</p><h2>Tu información</h2></div><CircleUserRound aria-hidden="true" /></div>
+          <div className="card-heading"><div><p className="eyebrow">Tu cuenta</p><h2>Tu información</h2></div><CircleUserRound aria-hidden="true" /></div>
           <dl className="profile-data-list">
             <div><dt>Nombre</dt><dd>{user?.name}</dd></div>
             <div><dt>Correo electrónico</dt><dd>{user?.email}</dd></div>
             <div><dt>Tipo de cuenta</dt><dd>Cliente Solandre</dd></div>
-            <div><dt>Pedidos en esta sesión</dt><dd>{orderCount}</dd></div>
+            <div><dt>Pedidos asociados a tu cuenta</dt><dd>{orderCount}</dd></div>
           </dl>
-          <p className="profile-demo-note">Esta pantalla usa datos de demostración. La información no se guarda en un servidor.</p>
+          <p className="profile-demo-note">Los datos de perfil se muestran desde tu sesión. El historial completo estará disponible cuando el backend exponga la consulta de pedidos del cliente.</p>
         </section>
         <section className="profile-perks-card">
           <span className="profile-perk-icon"><BadgeCheck aria-hidden="true" /></span>

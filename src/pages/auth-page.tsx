@@ -13,7 +13,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Brand } from "@/components/site-shell";
 import { useAuth } from "@/context/auth-context";
-import { dashboardForRole } from "@/services/demo-auth";
+import { dashboardForRole } from "@/auth/roles";
 
 export function AuthPage({ mode }: { mode: "login" | "register" }) {
   const isRegister = mode === "register";

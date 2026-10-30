@@ -1,11 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import type { DemoUser } from "@/types";
+import type { User } from "@/types";
 
 interface AuthState {
-  user: DemoUser | null;
+  user: User | null;
   token: string | null;
-  setSession: (user: DemoUser, token: string) => void;
+  setSession: (user: User, token: string) => void;
   logout: () => void;
 }
 

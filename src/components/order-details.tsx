@@ -1,7 +1,7 @@
 import { Check, ChevronRight, Clock3, MapPin, PackageCheck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { formatMoney, formatTime, Modal, StatusBadge } from "@/components/ui-primitives"
-import type { DemoOrder, OrderStatus } from "@/types"
+import type { Order, OrderStatus } from "@/types"
 
 const orderSteps: OrderStatus[] = ["PENDIENTE", "EN_PREPARACION", "LISTO", "ENTREGADO"]
 const stepLabels: Record<string, string> = {
@@ -17,7 +17,7 @@ export function OrderDetails({
   onClose,
   onStatusChange,
 }: {
-  order: DemoOrder | null
+  order: Order | null
   open: boolean
   onClose: () => void
   onStatusChange?: (orderId: string, status: OrderStatus) => void

@@ -1,6 +1,6 @@
 import { createContext, useContext, useMemo, type ReactNode } from "react";
 
-import type { DemoUser } from "@/types";
+import type { User } from "@/types";
 import { useAuthStore } from "@/auth/auth.store";
 import {
   getApiErrorMessage,
@@ -9,8 +9,8 @@ import {
 } from "@/auth/auth.service";
 
 interface AuthContextValue {
-  user: DemoUser | null;
-  login: (email: string, password: string) => Promise<DemoUser>;
+  user: User | null;
+  login: (email: string, password: string) => Promise<User>;
   register: (
     name: string,
     email: string,

@@ -13,9 +13,9 @@ export type EstadoPedidoBackend =
 
 export interface CrearPedidoPayload {
   zona_id: number;
-  google_maps_link: string;
-  latitud: number;
-  longitud: number;
+  google_maps_link: string | null;
+  latitud: number | null;
+  longitud: number | null;
   direccion_referencia: string;
   metodo_pago: MetodoPago;
   items: {

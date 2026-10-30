@@ -1,11 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/auth-context";
 import { useRestaurant } from "@/context/restaurant-context";
-import { dashboardForRole } from "@/services/demo-auth";
 import { formatMoney } from "@/components/ui-primitives";
+import { pedidosService, type MetodoPago } from "@/services/pedidos.service";
+import { zonasService, type ZonaEntrega } from "@/services/zonas.service";
 
 export function CartDrawer({
   open,
@@ -20,48 +21,81 @@ export function CartDrawer({
     cart,
     cartCount,
     cartTotal,
-    createOrder,
+    clearCart,
     removeFromCart,
     setCartQuantity,
   } = useRestaurant();
   const [message, setMessage] = useState("");
+  const [zones, setZones] = useState<ZonaEntrega[]>([]);
+  const [zoneId, setZoneId] = useState("");
+  const [address, setAddress] = useState("");
+  const [payment, setPayment] = useState<MetodoPago>("Efectivo");
+  const [loadingZones, setLoadingZones] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    setLoadingZones(true);
+    zonasService.listar().then((result) => { if (!cancelled) setZones(result); }).catch((error) => {
+      console.error("Error cargando zonas de entrega:", error);
+      if (!cancelled) setMessage("No se pudieron cargar las zonas de entrega. Cierra y vuelve a abrir el carrito.");
+    }).finally(() => { if (!cancelled) setLoadingZones(false); });
+    return () => { cancelled = true; };
+  }, [open]);
 
   if (!open) return null;
 
   const handleCheckout = async () => {
-    if (!cart.length) return;
-
+    if (!cart.length || submitting) return;
     if (!user) {
       onClose();
       navigate("/login", { state: { fromCart: true } });
       return;
     }
-
     if (user.role !== "CLIENTE") {
-      setMessage(
-        "Debes ingresar con una cuenta de cliente para realizar pedidos.",
-      );
+      setMessage("Debes ingresar con una cuenta de cliente para realizar pedidos.");
       return;
     }
-
+    const zona = Number(zoneId);
+    if (!Number.isInteger(zona) || zona <= 0) {
+      setMessage("Selecciona una zona de entrega.");
+      return;
+    }
+    if (!address.trim()) {
+      setMessage("Escribe una dirección o referencia de entrega.");
+      return;
+    }
+    if (cart.some(({ meal }) => !meal.menuDiaId)) {
+      setMessage("El carrito contiene un elemento que no corresponde al menú diario publicado. Vacía el carrito y vuelve a seleccionar el menú.");
+      return;
+    }
     try {
+      setSubmitting(true);
       setMessage("Registrando tu pedido...");
-
-      // Pendiente: pasar aquí los datos reales de zona,
-      // dirección, ubicación y método de pago.
-      const order = await createOrder(user);
-
-      if (order) {
-        onClose();
-        navigate("/cliente/pedidos", {
-          state: { orderPlaced: order.id },
-        });
-      }
+      const pedido = await pedidosService.crear({
+        zona_id: zona,
+        google_maps_link: null,
+        latitud: null,
+        longitud: null,
+        direccion_referencia: address.trim(),
+        metodo_pago: payment,
+        items: cart.map(({ meal, quantity }) => ({
+          menu_dia_id: meal.menuDiaId as number,
+          cantidad: quantity,
+          exclusiones: [],
+        })),
+      });
+      clearCart();
+      onClose();
+      navigate("/cliente/pedidos", {
+        state: { orderPlaced: String(pedido.pedido_id), pickupToken: pedido.token_recoger, orderStatus: pedido.estado },
+      });
     } catch (error) {
       console.error("Error al registrar el pedido:", error);
-      setMessage(
-        "No se pudo registrar el pedido. Verifica los datos e inténtalo nuevamente.",
-      );
+      setMessage("No se pudo registrar el pedido en el servidor. Tu carrito se conserva; revisa los datos e inténtalo nuevamente.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -155,7 +189,28 @@ export function CartDrawer({
                 <span>Subtotal</span>
                 <strong>{formatMoney(cartTotal)}</strong>
               </div>
-              <p>El envío se coordina al confirmar tu pedido.</p>
+              <div className="grid gap-3 py-3">
+                <label className="grid gap-1 text-sm font-medium">
+                  Zona de entrega
+                  <select className="w-full rounded-md border bg-background px-3 py-2" value={zoneId} onChange={(event) => setZoneId(event.target.value)} disabled={loadingZones || submitting} required>
+                    <option value="">{loadingZones ? "Cargando zonas..." : "Selecciona una zona"}</option>
+                    {zones.map((zone) => <option key={zone.zona_id} value={zone.zona_id}>{zone.nombre_zona}</option>)}
+                  </select>
+                </label>
+                <label className="grid gap-1 text-sm font-medium">
+                  Dirección o referencia
+                  <input className="w-full rounded-md border bg-background px-3 py-2" value={address} onChange={(event) => setAddress(event.target.value)} placeholder="Calle, edificio, oficina o referencia" maxLength={250} required disabled={submitting} />
+                </label>
+                <label className="grid gap-1 text-sm font-medium">
+                  Método de pago
+                  <select className="w-full rounded-md border bg-background px-3 py-2" value={payment} onChange={(event) => setPayment(event.target.value as MetodoPago)} disabled={submitting}>
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="QR">QR</option>
+                    <option value="Transferencia">Transferencia</option>
+                  </select>
+                </label>
+                <p className="text-xs text-muted-foreground">La ubicación de Google Maps es opcional; por ahora registramos la dirección de referencia.</p>
+              </div>
               {message && (
                 <p className="form-message form-message-error" role="alert">
                   {message}
@@ -163,11 +218,12 @@ export function CartDrawer({
               )}
               <Button
                 className="cart-checkout-button"
+                disabled={submitting || loadingZones || !zones.length}
                 onClick={handleCheckout}
                 size="lg"
                 type="button"
               >
-                {user?.role === "CLIENTE" ? "Confirmar pedido" : "Continuar"}
+                {submitting ? "Enviando pedido..." : user?.role === "CLIENTE" ? "Confirmar pedido" : "Continuar"}
               </Button>
               {!user && (
                 <p className="cart-login-hint">

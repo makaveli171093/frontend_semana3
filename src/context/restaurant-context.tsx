@@ -2,19 +2,11 @@ import {
   createContext,
   useContext,
   useMemo,
-  useRef,
   useState,
   useEffect,
   type ReactNode,
 } from "react";
-import { demoMeals, demoOrders } from "@/data/demo-data";
-import type {
-  DemoOrder,
-  DemoUser,
-  Meal,
-  MealDraft,
-  OrderStatus,
-} from "@/types";
+import type { Order, User, Meal, MealDraft, OrderStatus } from "@/types";
 import { platosService, type Plato } from "@/services/platos.service";
 import { menuService } from "@/services/menu.service";
 
@@ -25,7 +17,7 @@ export interface CartItem {
 
 interface RestaurantContextValue {
   meals: Meal[];
-  orders: DemoOrder[];
+  orders: Order[];
   cart: CartItem[];
   cartCount: number;
   cartTotal: number;
@@ -34,7 +26,7 @@ interface RestaurantContextValue {
   setCartQuantity: (mealId: string, quantity: number) => void;
   removeFromCart: (mealId: string) => void;
   clearCart: () => void;
-  createOrder: (user: DemoUser) => DemoOrder | null;
+  createOrder: (user: User) => Order | null;
   saveMeal: (draft: MealDraft) => Promise<void>;
   toggleMealAvailability: (mealId: string) => void;
   updateOrderStatus: (orderId: string, status: OrderStatus) => void;
@@ -43,8 +35,8 @@ interface RestaurantContextValue {
 const RestaurantContext = createContext<RestaurantContextValue | null>(null);
 
 export function RestaurantProvider({ children }: { children: ReactNode }) {
-  const [meals, setMeals] = useState<Meal[]>(demoMeals);
-  const [orders, setOrders] = useState<DemoOrder[]>(demoOrders);
+  const [meals, setMeals] = useState<Meal[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [catalogLoading, setCatalogLoading] = useState(true);
   const [catalogError, setCatalogError] = useState<string | null>(null);
@@ -75,10 +67,7 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
               category: categoriaFrontend(plato.tipo),
               image: plato.imagen_url ?? "",
               price: existente?.price ?? 0,
-              available:
-                leerDisponibilidad()[String(plato.plato_id)] ??
-                existente?.available ??
-                false,
+              available: false,
               prepTime: existente?.prepTime ?? 0,
             };
           }),
@@ -120,6 +109,10 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
           platoPrincipal: menu.plato_principal?.nombre ?? "",
           bebida: menu.bebida?.nombre ?? "",
           postre: menu.postre?.nombre ?? "",
+          platoPrincipalDescripcion: menu.plato_principal?.descripcion ?? "",
+          bebidaDescripcion: menu.bebida?.descripcion ?? "",
+          postreDescripcion: menu.postre?.descripcion ?? "",
+
           name: menu.plato_principal?.nombre
             ? `Menú del día: ${menu.plato_principal.nombre}`
             : "Menú del día",
@@ -154,8 +147,6 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
       cancelled = true;
     };
   }, []);
-
-  const nextOrderNumber = useRef(1052);
 
   const cartCount = cart.reduce((count, item) => count + item.quantity, 0);
   const cartTotal = cart.reduce(
@@ -198,27 +189,10 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
       clearCart() {
         setCart([]);
       },
-      createOrder(user) {
-        if (!cart.length) return null;
-        const order: DemoOrder = {
-          id: `ORD-${nextOrderNumber.current}`,
-          customerId: user.id,
-          customerName: user.name,
-          createdAt: new Date().toISOString(),
-          items: cart.map(({ meal, quantity }) => ({
-            mealId: meal.id,
-            name: meal.name,
-            price: meal.price,
-            image: meal.image,
-            quantity,
-          })),
-          total: cartTotal,
-          status: "PENDIENTE",
-        };
-        nextOrderNumber.current += 1;
-        setOrders((current) => [order, ...current]);
-        setCart([]);
-        return order;
+      createOrder() {
+        // El pedido real requiere zona, dirección y método de pago.
+        // No generar pedidos locales ni simular una confirmación.
+        return null;
       },
 
       async saveMeal(draft) {
@@ -246,13 +220,9 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
             description: plato.descripcion ?? "",
             category: categoriaFrontend(plato.tipo),
             image: plato.imagen_url ?? "",
-            price: draft.price,
-            available: draft.available,
-            prepTime: draft.prepTime,
-            ...(anterior?.badge ? { badge: anterior.badge } : {}),
-            ...(anterior?.calories !== undefined
-              ? { calories: anterior.calories }
-              : {}),
+            price: 0,
+            available: false,
+            prepTime: 0,
           };
 
           return anterior
@@ -261,19 +231,9 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
         });
       },
 
-      toggleMealAvailability(mealId) {
-        setMeals((current) => {
-          const actualizado = current.map((meal) => {
-            if (meal.id !== mealId) return meal;
-
-            const disponible = !meal.available;
-            guardarDisponibilidad(meal.id, disponible);
-
-            return { ...meal, available: disponible };
-          });
-
-          return actualizado;
-        });
+      toggleMealAvailability() {
+        // La disponibilidad debe persistirse en el recurso de menú del backend.
+        // Hasta conectar ese endpoint, no cambiarla solo en el navegador.
       },
 
       updateOrderStatus(orderId, status) {
@@ -291,23 +251,6 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
       {children}
     </RestaurantContext.Provider>
   );
-}
-
-const AVAILABILITY_STORAGE_KEY = "solandre-meal-availability";
-
-function leerDisponibilidad(): Record<string, boolean> {
-  try {
-    const stored = localStorage.getItem(AVAILABILITY_STORAGE_KEY);
-    return stored ? JSON.parse(stored) : {};
-  } catch {
-    return {};
-  }
-}
-
-function guardarDisponibilidad(id: string, disponible: boolean) {
-  const estados = leerDisponibilidad();
-  estados[id] = disponible;
-  localStorage.setItem(AVAILABILITY_STORAGE_KEY, JSON.stringify(estados));
 }
 
 export function useRestaurant() {

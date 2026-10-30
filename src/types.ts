@@ -13,16 +13,11 @@ export type OrderStatus =
   | "ENTREGADO"
   | "CANCELADO";
 
-export interface DemoUser {
+export interface User {
   id: string;
   name: string;
   email: string;
   role: UserRole;
-}
-
-export interface DemoAccount {
-  user: DemoUser;
-  password: string;
 }
 
 export interface Meal {
@@ -43,6 +38,10 @@ export interface Meal {
   platoPrincipal?: string;
   bebida?: string;
   postre?: string;
+
+  platoPrincipalDescripcion?: string;
+  bebidaDescripcion?: string;
+  postreDescripcion?: string;
 }
 
 export type MealDraft = Omit<Meal, "id"> & { id?: string };
@@ -55,7 +54,7 @@ export interface OrderLine {
   quantity: number;
 }
 
-export interface DemoOrder {
+export interface Order {
   id: string;
   customerId: string;
   customerName: string;
@@ -65,7 +64,7 @@ export interface DemoOrder {
   status: OrderStatus;
 }
 
-export interface DemoCustomer {
+export interface Customer {
   id: string;
   name: string;
   email: string;

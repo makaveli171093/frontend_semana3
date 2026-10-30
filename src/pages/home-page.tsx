@@ -95,20 +95,10 @@ export function HomePage() {
                 </a>
               </div>
               <div className="hero-proof">
-                <div className="hero-proof-avatars" aria-hidden="true">
-                  <span>V</span>
-                  <span>M</span>
-                  <span>A</span>
-                </div>
+                <span className="hero-proof-mark" aria-hidden="true"><Leaf /></span>
                 <div>
                   <strong>Hecho con cariño</strong>
                   <span>por manos paceñas</span>
-                </div>
-                <span className="hero-proof-divider" aria-hidden="true" />
-                <div className="hero-proof-rating">
-                  <span>★</span>
-                  <strong>4.9</strong>
-                  <small>de 5</small>
                 </div>
               </div>
             </div>
@@ -139,8 +129,8 @@ export function HomePage() {
                 <Clock3 aria-hidden="true" />
               </span>
               <p>
-                <strong>Listo desde las 11:30</strong>
-                <span>Almuerzos recién preparados</span>
+                <strong>Menú del día</strong>
+                <span>Consulta la disponibilidad actual</span>
               </p>
             </div>
             <div>
